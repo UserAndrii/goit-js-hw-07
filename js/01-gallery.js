@@ -54,22 +54,10 @@ function createGalleryItemsMarkup(gallery) {
             />
           </a>
         </div>
-        `;
+      `;
     })
     .join("");
 };
-
-const instance = basicLightbox.create(
-  `<img src="#" width="1280" height="860">`,
-  {
-    onShow: (instance) => {
-      document.addEventListener("keydown", onEscapePress);
-    },
-    onClose: (instance) => {
-      document.removeEventListener("keydown", onEscapePress);
-    },
-  }
-);
 
 function onGalleryContainerClick(event) {
   event.preventDefault();
@@ -78,14 +66,23 @@ function onGalleryContainerClick(event) {
     return;
   }
 
-  const instanceImageEl = instance.element().querySelector("img");
-  instanceImageEl.src = event.target.dataset.source;
-
+  const instance = basicLightbox.create(
+    `<img src="${event.target.dataset.source}" width="1280" height="860">`,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", onEscapePress);
+      },
+      onClose: () => {
+        document.removeEventListener("keydown", onEscapePress);
+      },
+    }
+  );
   instance.show();
-};
 
-function onEscapePress(event) {
-  if (event.code === "Escape") {
-    instance.close();
+  function onEscapePress(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
   }
 };
+
